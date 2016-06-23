@@ -53,7 +53,7 @@ We will start by creating the project directory and add all the files we need fo
     |_ _ _ _ gulpfile.js
 
 We will first initialize package.json with all the npm dependencies. We will use the **browserify** module to transform all these dependencies to be compatible with browser js.
-
+```javascript
     {
       "name": "bitcoin-price-alert-backend",
       "main": "main.js",
@@ -78,7 +78,7 @@ We will first initialize package.json with all the npm dependencies. We will use
         "gulp-install": "^0.6.0"
       }
     }
-
+```
 We will add Gulpfile to automate Your Tasks Easily with Gulp.js
 
     touch gulpfile.js
