@@ -259,8 +259,6 @@ Bitcoin Component/
 Let us start by creating BitcoinCharts.js — a React component for displaying the real-time price updates on a chart.
 
 ```javascript   
-module.exports = FeedTab;
-
 var React = require("react");
 var appbaseRef = require("./appbase").appbaseRef;
 var config = require("./appbase").config;
@@ -322,7 +320,14 @@ ReactHighstock.Highcharts.setOptions({
     useUTC: false
   }
 });
+```   
+* Line 6–40, we define the config for the Highchart. We define three range Selector — 5 Minutes, 60 Minutes and all.
+* Line 43–54, We define the request object for Appbase. We will fetch last 1000 records.
+* Line 57–61, we set UTCFalse as false so that it will have local timestamp.
 
+Now that config are set, let us create BitcoinChart and use them. Add the following to BitcoinCharts.js
+
+```javascript    
 var BitcoinChart = React.createClass({
 
   componentDidMount: function () {
@@ -361,14 +366,11 @@ var BitcoinChart = React.createClass({
 module.exports = BitcoinChart;
 ```    
 
-* Line 6–40, we define the config for the Highchart. We define three range Selector — 5 Minutes, 60 Minutes and all.
-* Line 43–54, We define the request object for Appbase. We will fetch last 1000 records.
-* Line 57–61, we set UTCFalse as false so that it will have local timestamp.
-* Line 21–29: Inside **getInitialState,** we can set the initial state. The getInitialState method is like component’s constructor is called once at invocation
-* Line 65: The **componentDidMount** method is invoked once similar to the getInitialState, but only after the initial rendering of the component. 
-* Line 67–74, we use search on Appbase to fetch the historical data. We use the request body we created above.
-* Line 80–91, we use Appbase’s searchStream to fetch the new realtime results and then display it on the Highchart.
-* Line 92–96, we define the **render()** method which is a mandatory method for each component. Here we render ReactHighStock component of Highcharts.
+
+* Line 3: The **componentDidMount** method is invoked once similar to the getInitialState, but only after the initial rendering of the component. 
+* Line 5-16, we use search on Appbase to fetch the historical data. We use the request body we created above.
+* Line 18–29, we use Appbase’s searchStream to fetch the new realtime results and then display it on the Highchart.
+* Line 30–35, we define the **render()** method which is a mandatory method for each component. Here we render ReactHighStock component of Highcharts.
 
 Next, we will create Stats.js — a React component for displaying the real-time price updates.
 
