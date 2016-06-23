@@ -84,99 +84,100 @@ We will add Gulpfile to automate Your Tasks Easily with Gulp.js
     touch gulpfile.js
 
 and add following code to it:
+```javascript
+"use strict";
 
-    "use strict";
-    
-    var gulp = require('gulp');
-    var connect = require('gulp-connect'); //Runs a local dev server
-    var open = require('gulp-open'); //Open a URL in a web browser
-    var browserify = require('browserify'); // Bundles JS
-    var reactify = require('reactify');  // Transforms React JSX to JS
-    var source = require('vinyl-source-stream'); // Use conventional text streams with Gulp
-    var concat = require('gulp-concat'); //Concatenates files
-    // var lint = require('gulp-eslint'); //Lint JS files, including JSX
-    var babelify = require('babelify'); // support for es6
-    
-    var config = {
-    	port: 9005,
-    	devBaseUrl: 'http://localhost',
-    	paths: {
-    		html: './src/*.html',
-    		js: './src/**/*.js',
-    		images: './src/images/*',
-    		css: [
-          		'node_modules/bootstrap/dist/css/bootstrap.min.css',
-          		'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
-    					'./src/css/*.css'
-        	],
-    		dist: './dist',
-    		mainJs: './src/main.js'
-    	}
-    }
-    
-    //Start a local development server
-    gulp.task('connect', function() {
-    	connect.server({
-    		root: ['dist'],
-    		port: config.port,
-    		base: config.devBaseUrl,
-    		livereload: true
-    	});
-    });
-    
-    gulp.task('open', ['connect'], function() {
-    	gulp.src('dist/index.html')
-    		.pipe(open('', { url: config.devBaseUrl + ':' + config.port + '/'}));
-    });
-    
-    gulp.task('html', function() {
-    	gulp.src(config.paths.html)
-    		.pipe(gulp.dest(config.paths.dist))
-    		.pipe(connect.reload());
-    });
-    
-    gulp.task('js', function() {
-    	browserify(config.paths.mainJs)
-    
-    		.transform(reactify)
-    		.bundle()
-    		.on('error', console.error.bind(console))
-    		.pipe(source('bundle.js'))
-    		.pipe(gulp.dest(config.paths.dist + '/scripts'))
-    		.pipe(connect.reload());
-    });
-    
-    gulp.task('css', function() {
-    	gulp.src(config.paths.css)
-    		.pipe(concat('bundle.css'))
-    		.pipe(gulp.dest(config.paths.dist + '/css'));
-    });
-    
-    // Migrates images to dist folder
-    // Note that I could even optimize my images here
-    gulp.task('images', function () {
-        gulp.src(config.paths.images)
-            .pipe(gulp.dest(config.paths.dist + '/images'))
-            .pipe(connect.reload());
-    
-        //publish favicon
-        gulp.src('./src/favicon.ico')
-            .pipe(gulp.dest(config.paths.dist));
-    });
-    
-    // gulp.task('lint', function() {
-    // 	return gulp.src(config.paths.js)
-    // 		.pipe(lint({config: 'eslint.config.json'}))
-    // 		.pipe(lint.format());
-    // });
-    
-    gulp.task('watch', function() {
-    	gulp.watch(config.paths.html, ['html']);
-    	gulp.watch(config.paths.js, ['js']);
-    	gulp.watch(config.paths.css, ['css']);
-    });
-    
-    gulp.task('default', ['html', 'js', 'css', 'images', 'open', 'watch']);
+var gulp = require('gulp');
+var connect = require('gulp-connect'); //Runs a local dev server
+var open = require('gulp-open'); //Open a URL in a web browser
+var browserify = require('browserify'); // Bundles JS
+var reactify = require('reactify');  // Transforms React JSX to JS
+var source = require('vinyl-source-stream'); // Use conventional text streams with Gulp
+var concat = require('gulp-concat'); //Concatenates files
+// var lint = require('gulp-eslint'); //Lint JS files, including JSX
+var babelify = require('babelify'); // support for es6
+
+var config = {
+	port: 9005,
+	devBaseUrl: 'http://localhost',
+	paths: {
+		html: './src/*.html',
+		js: './src/**/*.js',
+		images: './src/images/*',
+		css: [
+      		'node_modules/bootstrap/dist/css/bootstrap.min.css',
+      		'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
+					'./src/css/*.css'
+    	],
+		dist: './dist',
+		mainJs: './src/main.js'
+	}
+}
+
+//Start a local development server
+gulp.task('connect', function() {
+	connect.server({
+		root: ['dist'],
+		port: config.port,
+		base: config.devBaseUrl,
+		livereload: true
+	});
+});
+
+gulp.task('open', ['connect'], function() {
+	gulp.src('dist/index.html')
+		.pipe(open('', { url: config.devBaseUrl + ':' + config.port + '/'}));
+});
+
+gulp.task('html', function() {
+	gulp.src(config.paths.html)
+		.pipe(gulp.dest(config.paths.dist))
+		.pipe(connect.reload());
+});
+
+gulp.task('js', function() {
+	browserify(config.paths.mainJs)
+
+		.transform(reactify)
+		.bundle()
+		.on('error', console.error.bind(console))
+		.pipe(source('bundle.js'))
+		.pipe(gulp.dest(config.paths.dist + '/scripts'))
+		.pipe(connect.reload());
+});
+
+gulp.task('css', function() {
+	gulp.src(config.paths.css)
+		.pipe(concat('bundle.css'))
+		.pipe(gulp.dest(config.paths.dist + '/css'));
+});
+
+// Migrates images to dist folder
+// Note that I could even optimize my images here
+gulp.task('images', function () {
+    gulp.src(config.paths.images)
+        .pipe(gulp.dest(config.paths.dist + '/images'))
+        .pipe(connect.reload());
+
+    //publish favicon
+    gulp.src('./src/favicon.ico')
+        .pipe(gulp.dest(config.paths.dist));
+});
+
+// gulp.task('lint', function() {
+// 	return gulp.src(config.paths.js)
+// 		.pipe(lint({config: 'eslint.config.json'}))
+// 		.pipe(lint.format());
+// });
+
+gulp.task('watch', function() {
+	gulp.watch(config.paths.html, ['html']);
+	gulp.watch(config.paths.js, ['js']);
+	gulp.watch(config.paths.css, ['css']);
+});
+
+gulp.task('default', ['html', 'js', 'css', 'images', 'open', 'watch']);
+```    
 
 The code will go in the **src/** directory, let’s create it
 
@@ -203,45 +204,48 @@ We use the [appbase-js library](http://docs.appbase.io/scalr/javascript/api-refe
 
 Login to the appbase.io dashboard to create an app and retrieve the **username** and **password** fields as shown in the above image. We will add them along with the **appname ** in the config.json file as shown below. We will also  set the **type** field (it’s equivalent to a table in SQL) to a string value, say “prices” and use it for retrieving the realtime price data.
 
-	var Appbase = require("appbase-js");
-	var config = {
-	  "appname": "your_appbase_appname",
-	  "username": "your_appbase_app's_username",
-	  "password": "your_appbase_app's_password",
-	  "type": "your_app's_default_type_to_write_data"
-	};
-	var appbaseRef = new Appbase({
-	  url: 'https://scalr.api.appbase.io',
-	  appname: config.appname,
-	  username: config.username,
-	  password: config.password
-	});
-	
-	exports.appbaseRef = appbaseRef;
-	exports.config = config;
+```javascript
+var Appbase = require("appbase-js");
+var config = {
+  "appname": "your_appbase_appname",
+  "username": "your_appbase_app's_username",
+  "password": "your_appbase_app's_password",
+  "type": "your_app's_default_type_to_write_data"
+};
+var appbaseRef = new Appbase({
+  url: 'https://scalr.api.appbase.io',
+  appname: config.appname,
+  username: config.username,
+  password: config.password
+});
+
+exports.appbaseRef = appbaseRef;
+exports.config = config;
+```    
 
 Next we will create Bitcoin component which will contain Stats and chart component which we will define ahead. Enter the following code in bitcoin.js:
-	
-	var React = require('react');
-	var Stats = require("./Stats");
-	var BitcoinChart = require("./BitcoinChart");
-	
-	var Bitcoin = React.createClass({
-	    handlePriceChange: function(priceObject){
-	        // Logic for handling the price change goes here
-	    },
-	    render: function() {
-	        return (
-	            <div>
-	                <Stats onPriceChange={this.handlePriceChange} />
-	                <BitcoinChart />
-	            </div>
-	        )
-	    }
-	});
-	
-	module.exports = Bitcoin;
 
+```javascript	
+var React = require('react');
+var Stats = require("./Stats");
+var BitcoinChart = require("./BitcoinChart");
+
+var Bitcoin = React.createClass({
+    handlePriceChange: function(priceObject){
+        // Logic for handling the price change goes here
+    },
+    render: function() {
+        return (
+            <div>
+                <Stats onPriceChange={this.handlePriceChange} />
+                <BitcoinChart />
+            </div>
+        )
+    }
+});
+
+module.exports = Bitcoin;
+```    
 A component in React is always invoked with a React.createClass({specObj}), where the specification object should contain a mandatory render() method. It can contain other methods for initialization and specifying state changes when the user interacts with the DOM. You can read in depth about a [component’s spec and lifecycle here](https://facebook.github.io/react/docs/component-specs.html).
 
 It is fairly simple file where we require our Stats component and render it in Bitcoin component.
@@ -258,105 +262,106 @@ As we saw, now we will be building two sub-components that builds our bitcoin co
 
 Let us start by creating BitcoinCharts.js — a React component for displaying the real-time price updates on a chart.
 
-	var React = require("react");
-	var appbaseRef = require("./appbase").appbaseRef;
-	var config = require("./appbase").config;
-	var ReactHighstock = require("react-highcharts/bundle/ReactHighstock");
-	
-	var data = []
-	var chartConfig = {
-	  rangeSelector: {
-	    buttons: [{
-	      count: 5,
-	      type: 'minute',
-	      text: '5M'
-	    }, {
-	      count: 60,
-	      type: 'minute',
-	      text: '60M'
-	    }, {
-	      type: 'all',
-	      text: 'All'
-	    }],
-	    inputEnabled: false,
-	    selected: 0
-	  },
-	
-	  title: {
-	    text: 'Live Bitcoin Price'
-	  },
-	
-	  xAxis: {
-	    minRange: 60 * 1000 * 2// Two minute
-	  },
-	  exporting: {
-	    enabled: false
-	  },
-	
-	  series: [{
-	    name: 'Bitcoin Price',
-	    data: data
-	  }]
-	}
-	
-	// Get 1000 records with desc sorted timestamp
-	var requestObject = {
-	  type: config.type,
-	  body: {
-	    size: 1000,
-	    query: {
-	      match_all: {}
-	    },
-	    sort: {
-	      timestamp: "desc"
-	    }
-	  }
-	};
-	
-	// Use the local time on the x-axis
-	ReactHighstock.Highcharts.setOptions({
-	    global: {
-	        useUTC: false
-	    }
-	});
-	
-	var BitcoinChart = React.createClass({
-	
-	  componentDidMount: function() {
-	    var self = this;
-	    appbaseRef.search(requestObject).on('data', function(res) {
-	      var hits = [];
-	      var chart = self.refs.stockchart.getChart();
-	      res.hits.hits.map(function(hit) {
-	        var x = (new Date(hit._source.timestamp)).getTime(), // current time
-	          y = hit._source.last;
-	        hits.push([x, y]);
-	      })
-	
-	      // Highchart expects data to be sorted
-	      hits = hits.sort();
-	      chart.series[0].setData(hits)
-	
-	      appbaseRef.searchStream(requestObject).on('data', function(stream) {
-	        var x = (new Date()).getTime(), // current time
-	          y = stream._source.last
-	        hits.push([x, y])
-	        chart.series[0].setData(hits)
-	      }).on('error', function(error) {
-	        console.log("<br>Stream error: ", JSON.stringify(error))
-	      });
-	    }).on('error', function(error) {
-	      console.log("<br>Search error: ", JSON.stringify(error))
-	    });
-	  },
-	  render: function() {
-	    return <ReactHighstock ref = "stockchart"
-	    config = {chartConfig}
-	    />
-	  }
-	});
-	module.exports = BitcoinChart;
+```javascript   
+var React = require("react");
+var appbaseRef = require("./appbase").appbaseRef;
+var config = require("./appbase").config;
+var ReactHighstock = require("react-highcharts/bundle/ReactHighstock");
 
+var data = []
+var chartConfig = {
+  rangeSelector: {
+    buttons: [{
+      count: 5,
+      type: 'minute',
+      text: '5M'
+    }, {
+      count: 60,
+      type: 'minute',
+      text: '60M'
+    }, {
+      type: 'all',
+      text: 'All'
+    }],
+    inputEnabled: false,
+    selected: 0
+  },
+
+  title: {
+    text: 'Live Bitcoin Price'
+  },
+
+  xAxis: {
+    minRange: 60 * 1000 * 2// Two minute
+  },
+  exporting: {
+    enabled: false
+  },
+
+  series: [{
+    name: 'Bitcoin Price',
+    data: data
+  }]
+}
+
+// Get 1000 records with desc sorted timestamp
+var requestObject = {
+  type: config.type,
+  body: {
+    size: 1000,
+    query: {
+      match_all: {}
+    },
+    sort: {
+      timestamp: "desc"
+    }
+  }
+};
+
+// Use the local time on the x-axis
+ReactHighstock.Highcharts.setOptions({
+    global: {
+        useUTC: false
+    }
+});
+
+var BitcoinChart = React.createClass({
+
+  componentDidMount: function() {
+    var self = this;
+    appbaseRef.search(requestObject).on('data', function(res) {
+      var hits = [];
+      var chart = self.refs.stockchart.getChart();
+      res.hits.hits.map(function(hit) {
+        var x = (new Date(hit._source.timestamp)).getTime(), // current time
+          y = hit._source.last;
+        hits.push([x, y]);
+      })
+
+      // Highchart expects data to be sorted
+      hits = hits.sort();
+      chart.series[0].setData(hits)
+
+      appbaseRef.searchStream(requestObject).on('data', function(stream) {
+        var x = (new Date()).getTime(), // current time
+          y = stream._source.last
+        hits.push([x, y])
+        chart.series[0].setData(hits)
+      }).on('error', function(error) {
+        console.log("<br>Stream error: ", JSON.stringify(error))
+      });
+    }).on('error', function(error) {
+      console.log("<br>Search error: ", JSON.stringify(error))
+    });
+  },
+  render: function() {
+    return <ReactHighstock ref = "stockchart"
+    config = {chartConfig}
+    />
+  }
+});
+module.exports = BitcoinChart;
+```    
 * Line 6–40, we define the config for the Highchart. We define three range Selector — 5 Minutes, 60 Minutes and all.
 * Line 43–54, We define the request object for Appbase. We will fetch last 1000 records.
 * Line 57–61, we set UTCFalse as false so that it will have local timestamp.
@@ -367,89 +372,92 @@ Let us start by creating BitcoinCharts.js — a React component for displaying t
 * Line 92–96, we define the **render()** method which is a mandatory method for each component. Here we render ReactHighStock component of Highcharts.
 
 Next, we will create Stats.js — a React component for displaying the real-time price updates.
-	var React = require("react");
-	var appbaseRef = require("./appbase").appbaseRef;
-	var config = require("./appbase").config;
-	
-	// Request object for fetching the last record
-	var requestObject = {
-	  type: config.type,
-	  body: {
-	    size: 1,
-	    query: {
-	      match_all: {}
-	    },
-	    sort: {
-	      timestamp: "desc"
-	    }
-	  }
-	};
-	
-	var Stats = React.createClass({
-	
-	  getInitialState: function(){
-	    return {
-	      bid: "0",
-	      last: "0",
-	      avg: "0",
-	      total: "0",
-	      ask: "0"
-	    };
-	  },
-	  componentDidMount: function(){
-	    var self = this;
-	    appbaseRef.search(requestObject).on('data', function(res) {
-	      // We fetch the last price data here, it will be returned in the res.hits.hits array
-	      self.updatePrice(res.hits.hits[0]._source);
-	      appbaseRef.searchStream(requestObject).on('data', function(stream) {
-	        // We subscribe to the last price value via searchStream method
-	        self.updatePrice(stream._source);
-	      }).on('error', function(error) {
-	        console.log('Error in streaming: ', error);
-	      });
-	    })
-	  },
-	  updatePrice: function(data){
-	    this.setState({bid: data.bid});
-	    this.setState({last: data.last});
-	    this.setState({avg: data['24h_avg']});
-	    this.setState({total: data.total_vol});
-	    this.setState({ask: data.ask});
-	    this.props.onPriceChange(data);
-	  },
-	  render: function(){
-	    return (
-	      <div className="row text-center">
-	        <div className="col-md-12">
-	            <p className="label-text">BID</p>
-	            <div id="odometer" className="odometer odometer-theme-digital">
-	              {this.state.bid}
-	            </div>
-	            <br /><br />
-	        </div>
-	        <div className="col-md-6">
-	          <p className="label-text">LAST</p>
-	          <p className="val" id="avg">{this.state.last}</p>
-	        </div>
-	        <div className="col-md-6">
-	          <p className="label-text">AVG OF 24 HRS</p>
-	          <p className="val" id="avg">{this.state.avg}</p>
-	        </div>
-	        <div className="col-md-6">
-	          <p className="label-text">TOTAL</p>
-	          <p className="val" id="avg">{this.state.total}</p>
-	        </div>
-	        <div className="col-md-6">
-	          <p className="label-text">ASK</p>
-	          <p className="val" id="avg">{this.state.ask}</p>
-	        </div>
-	        <h5> <i className="spinner"> </i> Listening</h5>
-	      </div>
-	    )
-	  }
-	});
-	module.exports = Stats;
-	
+
+```javascript   
+var React = require("react");
+var appbaseRef = require("./appbase").appbaseRef;
+var config = require("./appbase").config;
+
+// Request object for fetching the last record
+var requestObject = {
+  type: config.type,
+  body: {
+    size: 1,
+    query: {
+      match_all: {}
+    },
+    sort: {
+      timestamp: "desc"
+    }
+  }
+};
+
+var Stats = React.createClass({
+
+  getInitialState: function(){
+    return {
+      bid: "0",
+      last: "0",
+      avg: "0",
+      total: "0",
+      ask: "0"
+    };
+  },
+  componentDidMount: function(){
+    var self = this;
+    appbaseRef.search(requestObject).on('data', function(res) {
+      // We fetch the last price data here, it will be returned in the res.hits.hits array
+      self.updatePrice(res.hits.hits[0]._source);
+      appbaseRef.searchStream(requestObject).on('data', function(stream) {
+        // We subscribe to the last price value via searchStream method
+        self.updatePrice(stream._source);
+      }).on('error', function(error) {
+        console.log('Error in streaming: ', error);
+      });
+    })
+  },
+  updatePrice: function(data){
+    this.setState({bid: data.bid});
+    this.setState({last: data.last});
+    this.setState({avg: data['24h_avg']});
+    this.setState({total: data.total_vol});
+    this.setState({ask: data.ask});
+    this.props.onPriceChange(data);
+  },
+  render: function(){
+    return (
+      <div className="row text-center">
+        <div className="col-md-12">
+            <p className="label-text">BID</p>
+            <div id="odometer" className="odometer odometer-theme-digital">
+              {this.state.bid}
+            </div>
+            <br /><br />
+        </div>
+        <div className="col-md-6">
+          <p className="label-text">LAST</p>
+          <p className="val" id="avg">{this.state.last}</p>
+        </div>
+        <div className="col-md-6">
+          <p className="label-text">AVG OF 24 HRS</p>
+          <p className="val" id="avg">{this.state.avg}</p>
+        </div>
+        <div className="col-md-6">
+          <p className="label-text">TOTAL</p>
+          <p className="val" id="avg">{this.state.total}</p>
+        </div>
+        <div className="col-md-6">
+          <p className="label-text">ASK</p>
+          <p className="val" id="avg">{this.state.ask}</p>
+        </div>
+        <h5> <i className="spinner"> </i> Listening</h5>
+      </div>
+    )
+  }
+});
+module.exports = Stats;
+```    
+
 * Line 5–17, we define a JSON query for retrieving the last price value from appbase.io
 * Line 21–29: Inside **getInitialState,** we can set the initial state. The getInitialState method is like component’s constructor is called once at invocation
 * Line 30–41: The **componentDidMount** method is invoked once similar to the getInitialState, but only after the initial rendering of the component. We use this method to subscribe to realtime price changes
@@ -465,141 +473,145 @@ Let us now look into how we can use this component.
 Next, we will add the following code in the index.html. We are using odometer style.
 	
 
-    <!DOCTYPE html>
-    <html lang="en">
-	
-	<head>
-	  <title>React starter</title>
-	  <link rel="stylesheet" href="css/bundle.css" />
-	  <link rel="stylesheet" href="http://github.hubspot.com/odometer/themes/odometer-theme-digital.css" />
-	  <script src="http://github.hubspot.com/odometer/odometer.js"></script>
-	  <script src="https://rawgit.com/appbaseio/appbase-js/master/browser/appbase.js" type="text/javascript"></script>
-	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spinkit/1.2.5/spinkit.min.css">
-	</head>
-	
-	<body>
-	  <div class="container container-table">
-	    <div class="row vertical-center-row">
-	      <div class="col-sm-12 col-md-6 col-md-offset-3" id="bitcoin">
-	
-	      </div>
-	    </div>
-	  </div>
-	  <script src="scripts/bundle.js"></script>
-	</body>
-	
-	</html>
+```html   
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>React starter</title>
+  <link rel="stylesheet" href="css/bundle.css" />
+  <link rel="stylesheet" href="http://github.hubspot.com/odometer/themes/odometer-theme-digital.css" />
+  <script src="http://github.hubspot.com/odometer/odometer.js"></script>
+  <script src="https://rawgit.com/appbaseio/appbase-js/master/browser/appbase.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spinkit/1.2.5/spinkit.min.css">
+</head>
+
+<body>
+  <div class="container container-table">
+    <div class="row vertical-center-row">
+      <div class="col-sm-12 col-md-6 col-md-offset-3" id="bitcoin">
+
+      </div>
+    </div>
+  </div>
+  <script src="scripts/bundle.js"></script>
+</body>
+
+</html>
+```    
 
 Add style.css in css folder:    
 
-	.odometer {
-	  font-size: 50px;
-	}
-	
-	.odometer {
-	  font-size: 50px;
-	  position: fixed;
-	  border-radius: 5px;
-	  border: .1em solid rgba(139, 245, 165, 0.4);
-	  border-top-width: 0.1em;
-	  border-right-width: 0.1em;
-	  border-bottom-width: 0.1em;
-	  border-left-width: 0.1em;
-	  border-top-style: solid;
-	  border-right-style: solid;
-	  border-bottom-style: solid;
-	  border-left-style: solid;
-	  border-top-color: rgba(139, 245, 165, 0.4);
-	  border-right-color: rgba(139, 245, 165, 0.4);
-	  border-bottom-color: rgba(139, 245, 165, 0.4);
-	  border-left-color: rgba(139, 245, 165, 0.4);
-	  -moz-border-top-colors: none;
-	  -moz-border-right-colors: none;
-	  -moz-border-bottom-colors: none;
-	  -moz-border-left-colors: none;
-	  border-image-source: none;
-	  border-image-slice: 100% 100% 100% 100%;
-	  border-image-width: 1 1 1 1;
-	  border-image-outset: 0 0 0 0;
-	  border-image-repeat: stretch stretch;
-	}
-	
-	.btn {
-	  width: 100%;
-	  display: inline-block;
-	  ;
-	  margin: 0.5%;
-	}
-	
-	.bid-center {
-	  margin-left: 35%;
-	  margin-top: 5%;
-	  margin-bottom: 5%;
-	}
-	
-	.max {
-	  width: 100%;
-	}
-	
-	.stats {
-	  margin-top: 5%;
-	}
-	
-	.label-text {
-	  font-family: "Wallpoet", monospace;
-	  font-size: 20px;
-	}
-	
-	p {
-	  font-size: 30px;
-	}
-	
-	html,
-	body,
-	.container-table {
-	  height: 100%;
-	}
-	
-	.container-table {
-	  display: table;
-	}
-	
-	.vertical-center-row {
-	  display: table-cell;
-	  vertical-align: middle;
-	}
-	
-	.spinner {
-	  width: 15px !important;
-	  height: 15px !important;
-	  display: inline-block;
-	  border-radius: 100%;
-	  background-color: black;
-	  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
-	  animation: sk-scaleout 1.0s infinite ease-in-out;
-	}
-	
-	@-webkit-keyframes sk-scaleout {
-	  0% {
-	    -webkit-transform: scale(0)
-	  }
-	  100% {
-	    -webkit-transform: scale(1.0);
-	    opacity: 0;
-	  }
-	}
-	
-	@keyframes sk-scaleout {
-	  0% {
-	    -webkit-transform: scale(0);
-	    transform: scale(0);
-	  }
-	  100% {
-	    -webkit-transform: scale(1.0);
-	    transform: scale(1.0);
-	    opacity: 0;
-	  }
-	}
+```css   
+.odometer {
+  font-size: 50px;
+}
+
+.odometer {
+  font-size: 50px;
+  position: fixed;
+  border-radius: 5px;
+  border: .1em solid rgba(139, 245, 165, 0.4);
+  border-top-width: 0.1em;
+  border-right-width: 0.1em;
+  border-bottom-width: 0.1em;
+  border-left-width: 0.1em;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: rgba(139, 245, 165, 0.4);
+  border-right-color: rgba(139, 245, 165, 0.4);
+  border-bottom-color: rgba(139, 245, 165, 0.4);
+  border-left-color: rgba(139, 245, 165, 0.4);
+  -moz-border-top-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  border-image-source: none;
+  border-image-slice: 100% 100% 100% 100%;
+  border-image-width: 1 1 1 1;
+  border-image-outset: 0 0 0 0;
+  border-image-repeat: stretch stretch;
+}
+
+.btn {
+  width: 100%;
+  display: inline-block;
+  ;
+  margin: 0.5%;
+}
+
+.bid-center {
+  margin-left: 35%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.max {
+  width: 100%;
+}
+
+.stats {
+  margin-top: 5%;
+}
+
+.label-text {
+  font-family: "Wallpoet", monospace;
+  font-size: 20px;
+}
+
+p {
+  font-size: 30px;
+}
+
+html,
+body,
+.container-table {
+  height: 100%;
+}
+
+.container-table {
+  display: table;
+}
+
+.vertical-center-row {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.spinner {
+  width: 15px !important;
+  height: 15px !important;
+  display: inline-block;
+  border-radius: 100%;
+  background-color: black;
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0)
+  }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
+```    
 
 Now we will add a div for rendering the status update text inside the container div with id bitcoin we created above as shown in the snippet here.
 
@@ -628,14 +640,16 @@ The above shows how our final directory structure would look. Let’s initialize
 
 In Node, the package.json file holds the configuration for our app. Node’s package manager (npm) will use this to install any dependencies or modules that we are going to use. We will update package.json with the following json:
 
-    {
-      "name": "bitcoin-price-alert-backend",
-      "main": "index.js",
-      "dependencies": {
-        "async": "^2.0.0-rc.5",
-        "request": "^2.72.0"
-      }
-    }
+```javascript   
+{
+  "name": "bitcoin-price-alert-backend",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^2.0.0-rc.5",
+    "request": "^2.72.0"
+  }
+}
+```    
 
 and then we will install the dependencies by running the following command inside the folder:
 
@@ -643,12 +657,14 @@ and then we will install the dependencies by running the following command insid
 
 Next, we will update config.json with the same appbase.io credential as the earlier config we created in the frontend. We will add the **appname** along with it’s **username** and **password **credentials as shown below:
 
-    {
-     "appname": "your_app_name",
-     "username": "app_username",
-     "password": "app_password",
-     "type": "index_type"
-    }
+```javascript   
+{
+ "appname": "your_app_name",
+ "username": "app_username",
+ "password": "app_password",
+ "type": "index_type"
+}
+```    
 
 ### Step 5: Poll for bitcoin prices
 
@@ -659,68 +675,69 @@ We will be using AWS Lambda for polling bitcoin APIs for live data which we will
 
 Now let us write code for polling Bitcoin API at regular interval which we will host on AWS Lambda.
 
-	var async = require("async"),
-	  request = require('request'),
-	  config = require('./config.json');
-	
-	var prevTimestamp;
-	// the 'handler' that lambda calls to execute our code
-	exports.handler = function(event, context) {
-	
-	  var data;
-	  var url = 'https://api.bitcoinaverage.com/ticker/USD/';
-	
-	  async.waterfall([
-	
-	    function(callback) {
-	
-	      // Make a request to bitcoin API for current price
-	      request(url, function(error, response, body) {
-	        if (!error && response != undefined && response.statusCode == 200) {
-	          data = JSON.parse(body);
-	          callback(null);
-	        } else {
-	          console.log("Got an error: ", error, ", status code: ", response.statusCode);
-	        }
-	      });
-	
-	    },
-	
-	    function(callback) {
-	
-	      // Convert the datetime to the unix timestamp
-	      data.timestamp = (new Date(data.timestamp)).getTime();
-	      if(prevTimestamp == data.timestamp)
-	        return;
-	      else
-	        prevTimestamp = data.timestamp;
-	
-	      // Index the data into Appbase
-	      request({
-	        url: 'http://scalr.api.appbase.io/' + config.appname + '/' + config.type, //URL to hit
-	        headers: {
-	          Authorization: 'Basic ' + new Buffer(config.username + ':' + config.password).toString('base64')
-	        },
-	        json: data,
-	        method: 'POST' //Specify the method
-	      }, function(error, response, body) {
-	        if (error) {
-	          console.log(error);
-	        } else {
-	          callback(null, 'done');
-	        }
-	      });
-	
-	    }
-	
-	    // optional callback for results
-	  ], function(err, result) {
-	    if (err) context.done(err, "Error!!");
-	    if (!err) context.done(null, "Success!");
-	  });
-	
-	};
+```javascript   
+var async = require("async"),
+  request = require('request'),
+  config = require('./config.json');
 
+var prevTimestamp;
+// the 'handler' that lambda calls to execute our code
+exports.handler = function(event, context) {
+
+  var data;
+  var url = 'https://api.bitcoinaverage.com/ticker/USD/';
+
+  async.waterfall([
+
+    function(callback) {
+
+      // Make a request to bitcoin API for current price
+      request(url, function(error, response, body) {
+        if (!error && response != undefined && response.statusCode == 200) {
+          data = JSON.parse(body);
+          callback(null);
+        } else {
+          console.log("Got an error: ", error, ", status code: ", response.statusCode);
+        }
+      });
+
+    },
+
+    function(callback) {
+
+      // Convert the datetime to the unix timestamp
+      data.timestamp = (new Date(data.timestamp)).getTime();
+      if(prevTimestamp == data.timestamp)
+        return;
+      else
+        prevTimestamp = data.timestamp;
+
+      // Index the data into Appbase
+      request({
+        url: 'http://scalr.api.appbase.io/' + config.appname + '/' + config.type, //URL to hit
+        headers: {
+          Authorization: 'Basic ' + new Buffer(config.username + ':' + config.password).toString('base64')
+        },
+        json: data,
+        method: 'POST' //Specify the method
+      }, function(error, response, body) {
+        if (error) {
+          console.log(error);
+        } else {
+          callback(null, 'done');
+        }
+      });
+
+    }
+
+    // optional callback for results
+  ], function(err, result) {
+    if (err) context.done(err, "Error!!");
+    if (!err) context.done(null, "Success!");
+  });
+
+};
+```    
 
 
 ### Step 6: Uploading
