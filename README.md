@@ -669,7 +669,7 @@ Next, we will update config.json with the same appbase.io credential as the earl
 
 We will be using AWS Lambda for polling bitcoin APIs for live data which we will then insert into Appbase which provides streaming interface. 
 
-[AWS Lambda](https://aws.amazon.com/lambda/) combines a robust event infrastructure with a simple deployment model. It lets you write small NodeJS functions that will be called with the event metadata from events triggered by various services or through your own code. One of the benefits of Lambda is that you don’t have to scale your Lambda functions as usage increases, AWS does this for you. You pay only for the compute time you consume - there is no charge when your code is not running which makes it pretty good for our use-case. Also, first 1 million requests per month are free. More about aws lambda pricing [here](https://aws.amazon.com/lambda/pricing/). You can follow up with this article with the free tier but for using Lambda(or any AWS services), you will have to enter your credit card details.
+[AWS Lambda](https://aws.amazon.com/lambda/) combines a robust event infrastructure with a simple deployment model. It lets you write small NodeJS functions that will be called with the event metadata from events triggered by various services or through your own code. One of the benefits of Lambda is that you don’t have to scale your Lambda functions as usage increases, AWS does this for you. You pay only for the compute time you consume - there is no charge when your code is not running which makes it pretty good for our use-case. Also, first 1 million requests per month are free. More about aws lambda pricing [here](https://aws.amazon.com/lambda/pricing/). You can follow up with this article with the free tier but for using Lambda(or any AWS services), you will have to enter your credit card details. 
 
 
 Now let us write code for polling Bitcoin API at regular interval which we will host on AWS Lambda.
@@ -737,11 +737,13 @@ exports.handler = function (event, context) {
 
 };
 ```    
-
+In the above code, we exported handler function which will be executed by lambda. Inside the function, we make a request to [Bitcoin API](https://api.bitcoinaverage.com/ticker/USD/) and then index it to Appbase.     
 
 ### Step 6: Uploading
 
 Deploying to Lambda is as simple as zipping up all your code and calling an api function or cli command and pushing the zip file to Lambda. Lambda then starts the node VM and calls the node function based on your triggers.
+
+Create a new Lambda microservice by selecting AWS Lambda from the Services tab in the console, or go [here](https://console.aws.amazon.com/lambda/home?region=us-east-1) (link to US East N.Virginia again).
 
 To interact with Lambda functions you can either use the handy-dandy AWS Lambda (web) console or the AWS CLI. For this demo we are going to create and run a Lambda function uisng the web console. It’s just easier for the demo. Here are the steps:
 
@@ -749,7 +751,9 @@ To interact with Lambda functions you can either use the handy-dandy AWS Lambda 
 - Go to AWS lambda page and click on get started. This will bring you to the lambda console.
 - Click on the new lambda function and select the lambda-canary blueprint which is template for running the function at regular interval. 
 - In the configure event source, name the rule name and schedule expression which will define at what interval you want your function to be triggered. In our example, we will keep that as 1 minute. So our bitcoin prices will be updated every minute. Click next.
-- In the next screen, we will give name to our function as bitcoinPoller.  We will select Node.js as our runtime and then inside the the Lambda function code, we will click on Upload a zip file and then select the zip folder we created in step 5. Now define your handler in Lambda function handler and role section. Handler is defined as [name_of_your_file.functionName]. In our case it will be **index.handler**. Now create the basic execution role option for the Role. Click next.
+- In the next screen, we will give name to our function as bitcoinPoller.  We will select Node.js as our runtime and then inside the the Lambda function code, we will click on Upload a zip file and then select the zip folder we created in step 5.
+- Now define your handler in Lambda function handler and role section. Handler is defined as [name_of_your_file.functionName]. In our case it will be **index.handler**.
+- Now create the basic execution role option for the Role by just following that through with the defaults. This will allow your AWS Lambda function to have permissions to execute the function. Once this is created and you’re taken back to the AWS Lambda creating screen, select the role you just created (the default name is something like basic_execution_rule). Click next.
 
 ![](https://cdn-images-1.medium.com/max/800/1*6CKbrd0dicYNW8RYUtUnwQ.gif)
 
