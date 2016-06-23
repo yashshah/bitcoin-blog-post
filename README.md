@@ -362,6 +362,7 @@ var BitcoinChart = React.createClass({
 });
 module.exports = BitcoinChart;
 ```    
+
 * Line 6–40, we define the config for the Highchart. We define three range Selector — 5 Minutes, 60 Minutes and all.
 * Line 43–54, We define the request object for Appbase. We will fetch last 1000 records.
 * Line 57–61, we set UTCFalse as false so that it will have local timestamp.
