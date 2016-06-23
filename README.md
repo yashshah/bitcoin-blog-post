@@ -490,7 +490,8 @@ Next, we will add the following code in the index.html. We are using odometer st
 	
 	</html>
 
-Add style.css in css folder:
+Add style.css in css folder:    
+
 	.odometer {
 	  font-size: 50px;
 	}
@@ -651,7 +652,12 @@ Next, we will update config.json with the same appbase.io credential as the earl
 
 ### Step 5: Poll for bitcoin prices
 
-Next we will write code for polling Bitcoin API at regular interval which we will host on AWS Lambda.
+We will be using AWS Lambda for polling bitcoin APIs for live data which we will then insert into Appbase which provides streaming interface. 
+
+[AWS Lambda](https://aws.amazon.com/lambda/) combines a robust event infrastructure with a simple deployment model. It lets you write small NodeJS functions that will be called with the event metadata from events triggered by various services or through your own code. One of the benefits of Lambda is that you don’t have to scale your Lambda functions as usage increases, AWS does this for you. You pay only for the compute time you consume - there is no charge when your code is not running which makes it pretty good for our use-case. Also, first 1 million requests per month are free. More about aws lambda pricing [here](https://aws.amazon.com/lambda/pricing/). You can follow up with this article with the free tier but for using Lambda(or any AWS services), you will have to enter your credit card details.
+
+
+Now let us write code for polling Bitcoin API at regular interval which we will host on AWS Lambda.
 
 	var async = require("async"),
 	  request = require('request'),
@@ -715,9 +721,30 @@ Next we will write code for polling Bitcoin API at regular interval which we wil
 	
 	};
 
+
+
 ### Step 6: Uploading
 
+Deploying to Lambda is as simple as zipping up all your code and calling an api function or cli command and pushing the zip file to Lambda. Lambda then starts the node VM and calls the node function based on your triggers.
+
+To interact with Lambda functions you can either use the handy-dandy AWS Lambda (web) console or the AWS CLI. For this demo we are going to create and run a Lambda function uisng the web console. It’s just easier for the demo. Here are the steps:
+
+- Zip all your files in your aws-lambda-polling folder including the node_modules
+- Go to AWS lambda page and click on get started. This will bring you to the lambda console.
+- Click on the new lambda function and select the lambda-canary blueprint which is template for running the function at regular interval. 
+- In the configure event source, name the rule name and schedule expression which will define at what interval you want your function to be triggered. In our example, we will keep that as 1 minute. So our bitcoin prices will be updated every minute. Click next.
+- In the next screen, we will give name to our function as bitcoinPoller.  We will select Node.js as our runtime and then inside the the Lambda function code, we will click on Upload a zip file and then select the zip folder we created in step 5. Now define your handler in Lambda function handler and role section. Handler is defined as [name_of_your_file.functionName]. In our case it will be **index.handler**. Now create the basic execution role option for the Role. Click next.
+
 ![](https://cdn-images-1.medium.com/max/800/1*6CKbrd0dicYNW8RYUtUnwQ.gif)
+
+Now in the Review step, select enable the event source. It will start our event source which triggers our Lambda function at every 1 minute. Click on Create function.
+
+![](https://i.imgur.com/FlOWbNe.png)
+
+Now your lambda function will be executed every one minute and you will see the window like this on next page:
+
+![](https://camo.githubusercontent.com/98d41c99fc39847ef1933d752cb5a47b64d0d8a0/68747470733a2f2f692e696d6775722e636f6d2f744d6e355945392e706e67)
+
 
 Here is the link to the repository if you don’t want to copy paste from here and
 clone directly:
