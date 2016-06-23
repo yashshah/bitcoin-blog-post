@@ -54,30 +54,30 @@ We will start by creating the project directory and add all the files we need fo
 
 We will first initialize package.json with all the npm dependencies. We will use the **browserify** module to transform all these dependencies to be compatible with browser js.
 ```javascript
-    {
-      "name": "bitcoin-price-alert-backend",
-      "main": "main.js",
-        "dependencies": {
-        "appbase-js": "^0.10.7",
-        "bootstrap": "^3.3.5",
-        "browserify": "^10.2.4",
-        "gulp": "^3.9.0",
-        "gulp-concat": "^2.6.0",
-        "gulp-connect": "^2.2.0",
-        "gulp-eslint": "^0.15.0",
-        "gulp-open": "^0.3.2",
-        "jquery": "^2.1.4",
-        "react": "^15.1.0",
-        "react-dom": "^15.1.0",
-        "react-highcharts": "^8.3.2",
-        "reactify": "^1.1.1",
-        "vinyl-source-stream": "^1.1.0"
-      },
-      "devDependencies": {
-        "babelify": "^7.2.0",
-        "gulp-install": "^0.6.0"
-      }
-    }
+{
+  "name": "bitcoin-price-alert-backend",
+  "main": "main.js",
+    "dependencies": {
+    "appbase-js": "^0.10.7",
+    "bootstrap": "^3.3.5",
+    "browserify": "^10.2.4",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-eslint": "^0.15.0",
+    "gulp-open": "^0.3.2",
+    "jquery": "^2.1.4",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-highcharts": "^8.3.2",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "babelify": "^7.2.0",
+    "gulp-install": "^0.6.0"
+  }
+}
 ```
 We will add Gulpfile to automate Your Tasks Easily with Gulp.js
 
