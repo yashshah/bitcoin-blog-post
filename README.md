@@ -37,21 +37,21 @@ A component is a fundamental abstraction in React, an equivalent of UI widget. A
 ### Step 1: Setting up the project
 
 We will start by creating the project directory and add all the files we need for the components. You can call this directory **bitcoin-alert-component**. These are all the files we will be using for building the component.
-
-    bitcoin-alert-component/
-    |_ _ _ _ src/
-    |        |_ _ _ _ index.html
-    |        |_ _ _ _ main.js
-    |        |_ _ _ _ components/
-    |                |_ _ _ _ appbase.js
-    |                |_ _ _ _ Bitcoin.js
-    |                |_ _ _ _ BitcoinChart.js
-    |                |_ _ _ _ Stats.js
-    |        |_ _ _ _ css/
-    |                |_ _ _ _ style.css
-    |_ _ _ _ package.json
-    |_ _ _ _ gulpfile.js
-
+```    
+bitcoin-alert-component/
+|_ _ _ _ src/
+|        |_ _ _ _ index.html
+|        |_ _ _ _ main.js
+|        |_ _ _ _ components/
+|                |_ _ _ _ appbase.js
+|                |_ _ _ _ Bitcoin.js
+|                |_ _ _ _ BitcoinChart.js
+|                |_ _ _ _ Stats.js
+|        |_ _ _ _ css/
+|                |_ _ _ _ style.css
+|_ _ _ _ package.json
+|_ _ _ _ gulpfile.js
+```    
 We will first initialize package.json with all the npm dependencies. We will use the **browserify** module to transform all these dependencies to be compatible with browser js.
 ```javascript
 {
@@ -78,10 +78,12 @@ We will first initialize package.json with all the npm dependencies. We will use
     "gulp-install": "^0.6.0"
   }
 }
-```
-We will add Gulpfile to automate Your Tasks Easily with Gulp.js
+```    
 
-    touch gulpfile.js
+We will add Gulpfile to automate Your Tasks Easily with Gulp.js
+```javascript
+touch gulpfile.js
+```    
 
 and add following code to it:
 ```javascript
@@ -164,12 +166,6 @@ gulp.task('images', function () {
         .pipe(gulp.dest(config.paths.dist));
 });
 
-// gulp.task('lint', function() {
-// 	return gulp.src(config.paths.js)
-// 		.pipe(lint({config: 'eslint.config.json'}))
-// 		.pipe(lint.format());
-// });
-
 gulp.task('watch', function() {
 	gulp.watch(config.paths.html, ['html']);
 	gulp.watch(config.paths.js, ['js']);
@@ -180,24 +176,24 @@ gulp.task('default', ['html', 'js', 'css', 'images', 'open', 'watch']);
 ```    
 
 The code will go in the **src/** directory, let’s create it
-
-    mkdir -p src/components
-
+``` 
+mkdir -p src/components
+```    
 **main.js** will be our root javascript file. We will include it inside **index.html**. Let’s touch these two files.
-
-    touch src/index.html
-    touch src/main.js
-
+``` 
+touch src/index.html
+touch src/main.js
+```      
 ### Step 2: Writing React Components
 
 Let’s start by touching the component files.
-
-    cd src/components/
-    touch appbase.js        # config file for connecting to realtimedata
-    touch Bitcoin.js
-    touch BitcoinChart.js   
-    touch Stats.js          # display realtime price stats
-
+```javascript    
+cd src/components/
+touch appbase.js        # config file for connecting to realtimedata
+touch Bitcoin.js
+touch BitcoinChart.js   
+touch Stats.js          # display realtime price stats
+```     
 We use the [appbase-js library](http://docs.appbase.io/scalr/javascript/api-reference.html) (available via bower and npm) for making live queries for streaming the bitcoin prices.
 
 ![Enter your username and password fields for your app as shown](https://cdn-images-1.medium.com/max/800/1*f0f7AkZzuwI6Hu0poF1TKQ.gif)
@@ -231,17 +227,17 @@ var Stats = require("./Stats");
 var BitcoinChart = require("./BitcoinChart");
 
 var Bitcoin = React.createClass({
-    handlePriceChange: function(priceObject){
-        // Logic for handling the price change goes here
-    },
-    render: function() {
-        return (
-            <div>
-                <Stats onPriceChange={this.handlePriceChange} />
-                <BitcoinChart />
-            </div>
-        )
-    }
+  handlePriceChange: function (priceObject) {
+    // Logic for handling the price change goes here
+  },
+  render: function () {
+    return (
+      <div>
+        <Stats onPriceChange={this.handlePriceChange} />
+        <BitcoinChart />
+      </div>
+    )
+  }
 });
 
 module.exports = Bitcoin;
@@ -254,15 +250,17 @@ It is fairly simple file where we require our Stats component and render it in B
 * L9–16, we render the Stats component showing real-time bitcoin prices.
 
 As we saw, now we will be building two sub-components that builds our bitcoin component:
-
-	Bitcoin Component/
-	|_ _ _ _ BitcoinCharts component ( Display bitcoin data with history  on the chart)
-	|_ _ _ _ Stats component ( Display Bitcoin real time stats )
-
+```    
+Bitcoin Component/
+|_ _ _ _ BitcoinCharts component ( Display bitcoin data with history  on the chart)
+|_ _ _ _ Stats component ( Display Bitcoin real time stats )
+```    
 
 Let us start by creating BitcoinCharts.js — a React component for displaying the real-time price updates on a chart.
 
 ```javascript   
+module.exports = FeedTab;
+
 var React = require("react");
 var appbaseRef = require("./appbase").appbaseRef;
 var config = require("./appbase").config;
@@ -276,13 +274,13 @@ var chartConfig = {
       type: 'minute',
       text: '5M'
     }, {
-      count: 60,
-      type: 'minute',
-      text: '60M'
-    }, {
-      type: 'all',
-      text: 'All'
-    }],
+        count: 60,
+        type: 'minute',
+        text: '60M'
+      }, {
+        type: 'all',
+        text: 'All'
+      }],
     inputEnabled: false,
     selected: 0
   },
@@ -320,19 +318,19 @@ var requestObject = {
 
 // Use the local time on the x-axis
 ReactHighstock.Highcharts.setOptions({
-    global: {
-        useUTC: false
-    }
+  global: {
+    useUTC: false
+  }
 });
 
 var BitcoinChart = React.createClass({
 
-  componentDidMount: function() {
+  componentDidMount: function () {
     var self = this;
-    appbaseRef.search(requestObject).on('data', function(res) {
+    appbaseRef.search(requestObject).on('data', function (res) {
       var hits = [];
       var chart = self.refs.stockchart.getChart();
-      res.hits.hits.map(function(hit) {
+      res.hits.hits.map(function (hit) {
         var x = (new Date(hit._source.timestamp)).getTime(), // current time
           y = hit._source.last;
         hits.push([x, y]);
@@ -342,22 +340,22 @@ var BitcoinChart = React.createClass({
       hits = hits.sort();
       chart.series[0].setData(hits)
 
-      appbaseRef.searchStream(requestObject).on('data', function(stream) {
+      appbaseRef.searchStream(requestObject).on('data', function (stream) {
         var x = (new Date()).getTime(), // current time
           y = stream._source.last
         hits.push([x, y])
         chart.series[0].setData(hits)
-      }).on('error', function(error) {
+      }).on('error', function (error) {
         console.log("<br>Stream error: ", JSON.stringify(error))
       });
-    }).on('error', function(error) {
+    }).on('error', function (error) {
       console.log("<br>Search error: ", JSON.stringify(error))
     });
   },
-  render: function() {
+  render: function () {
     return <ReactHighstock ref = "stockchart"
-    config = {chartConfig}
-    />
+      config = {chartConfig}
+      />
   }
 });
 module.exports = BitcoinChart;
@@ -395,7 +393,7 @@ var requestObject = {
 
 var Stats = React.createClass({
 
-  getInitialState: function(){
+  getInitialState: function () {
     return {
       bid: "0",
       last: "0",
@@ -404,36 +402,36 @@ var Stats = React.createClass({
       ask: "0"
     };
   },
-  componentDidMount: function(){
+  componentDidMount: function () {
     var self = this;
-    appbaseRef.search(requestObject).on('data', function(res) {
+    appbaseRef.search(requestObject).on('data', function (res) {
       // We fetch the last price data here, it will be returned in the res.hits.hits array
       self.updatePrice(res.hits.hits[0]._source);
-      appbaseRef.searchStream(requestObject).on('data', function(stream) {
+      appbaseRef.searchStream(requestObject).on('data', function (stream) {
         // We subscribe to the last price value via searchStream method
         self.updatePrice(stream._source);
-      }).on('error', function(error) {
+      }).on('error', function (error) {
         console.log('Error in streaming: ', error);
       });
     })
   },
-  updatePrice: function(data){
-    this.setState({bid: data.bid});
-    this.setState({last: data.last});
-    this.setState({avg: data['24h_avg']});
-    this.setState({total: data.total_vol});
-    this.setState({ask: data.ask});
+  updatePrice: function (data) {
+    this.setState({ bid: data.bid });
+    this.setState({ last: data.last });
+    this.setState({ avg: data['24h_avg'] });
+    this.setState({ total: data.total_vol });
+    this.setState({ ask: data.ask });
     this.props.onPriceChange(data);
   },
-  render: function(){
+  render: function () {
     return (
       <div className="row text-center">
         <div className="col-md-12">
-            <p className="label-text">BID</p>
-            <div id="odometer" className="odometer odometer-theme-digital">
-              {this.state.bid}
-            </div>
-            <br /><br />
+          <p className="label-text">BID</p>
+          <div id="odometer" className="odometer odometer-theme-digital">
+            {this.state.bid}
+          </div>
+          <br /><br />
         </div>
         <div className="col-md-6">
           <p className="label-text">LAST</p>
@@ -627,18 +625,18 @@ We have real-time interface of Bitcoin price in place, where user can see the la
 ### Step 4: Setup Credentials
 
 The first thing we need to do is create the project and all the files we need. Let’s start by creating a new directory that we’ll call “aws-lambda-polling”. We’ll put all the files that we will need to run on server side in this new folder.
-
-    aws-lambda-polling/
-    |_ _ _ _ index.js
-    |_ _ _ _ config.json
-    |_ _ _ _ package.json
-
+```    
+aws-lambda-polling/
+|_ _ _ _ index.js
+|_ _ _ _ config.json
+|_ _ _ _ package.json
+```    
 The above shows how our final directory structure would look. Let’s initialize all these files for later ease of access.
-
-    touch app.js
-    touch config.json
-    touch package.json
-
+```    
+touch app.js
+touch config.json
+touch package.json
+```    
 In Node, the package.json file holds the configuration for our app. Node’s package manager (npm) will use this to install any dependencies or modules that we are going to use. We will update package.json with the following json:
 
 ```javascript   
@@ -653,17 +651,17 @@ In Node, the package.json file holds the configuration for our app. Node’s pac
 ```    
 
 and then we will install the dependencies by running the following command inside the folder:
-
-    npm install
-
+```    
+npm install
+```    
 Next, we will update config.json with the same appbase.io credential as the earlier config we created in the frontend. We will add the **appname** along with it’s **username** and **password **credentials as shown below:
 
 ```javascript   
 {
- "appname": "your_app_name",
- "username": "app_username",
- "password": "app_password",
- "type": "index_type"
+  "appname": "your_app_name",
+  "username": "app_username",
+  "password": "app_password",
+  "type": "index_type"
 }
 ```    
 
@@ -683,17 +681,17 @@ var async = require("async"),
 
 var prevTimestamp;
 // the 'handler' that lambda calls to execute our code
-exports.handler = function(event, context) {
+exports.handler = function (event, context) {
 
   var data;
   var url = 'https://api.bitcoinaverage.com/ticker/USD/';
 
   async.waterfall([
 
-    function(callback) {
+    function (callback) {
 
       // Make a request to bitcoin API for current price
-      request(url, function(error, response, body) {
+      request(url, function (error, response, body) {
         if (!error && response != undefined && response.statusCode == 200) {
           data = JSON.parse(body);
           callback(null);
@@ -704,11 +702,11 @@ exports.handler = function(event, context) {
 
     },
 
-    function(callback) {
+    function (callback) {
 
       // Convert the datetime to the unix timestamp
       data.timestamp = (new Date(data.timestamp)).getTime();
-      if(prevTimestamp == data.timestamp)
+      if (prevTimestamp == data.timestamp)
         return;
       else
         prevTimestamp = data.timestamp;
@@ -721,7 +719,7 @@ exports.handler = function(event, context) {
         },
         json: data,
         method: 'POST' //Specify the method
-      }, function(error, response, body) {
+      }, function (error, response, body) {
         if (error) {
           console.log(error);
         } else {
@@ -732,7 +730,7 @@ exports.handler = function(event, context) {
     }
 
     // optional callback for results
-  ], function(err, result) {
+  ], function (err, result) {
     if (err) context.done(err, "Error!!");
     if (!err) context.done(null, "Success!");
   });
